@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Node structure for the parsing tree
+typedef struct Node {
+    char value[10];
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+// Function to create a new node
+Node* createNode(char* value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    strcpy(newNode->value, value);
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to print the parsing tree
+void printTree(Node* root, int space) {
+    if (root == NULL) return;
+    space += 5;
+    printTree(root->right, space);
+    printf("\n");
+    for (int i = 5; i < space; i++) printf(" ");
+    printf("%s\n", root->value);
+    printTree(root->left, space);
+}
+
+int main() {
+    // Input string
+    char input[] = "id*id+id";
+
+    // Stack to simulate the parsing process
+    Node* stack[100];
+    int top = -1;
+
+    // Parsing tree root
+    Node* root = NULL;
+
+    // Start parsing
+    for (int i = 0; i < strlen(input); i++) {
+        // Shift operation: create a new node for the terminal symbol and push it onto the stack
+        if (input[i] == 'i' || input[i] == '*' || input[i] == '+') {
+            Node* newNode = createNode(&input[i]);
+            stack[++top] = newNode;
+        }
+        // Reduce operation: pop the necessary symbols from the stack, create a new node for the corresponding non-terminal symbol, and push it onto the stack
+        else {
+            Node* f = stack[top--];
+            Node* op = stack[top--];
+            Node* T = stack[top--];
+            Node* E = createNode("E");
+            E->left = T;
+            E->right = op;
+            op->left = E;
+            op->right = f;
+            stack[++top] = E;
+            root = E; // Update the root of the parsing tree
+        }
+    }
+
+    // Print the parsing tree
+    printf("Parsing Tree:\n");
+    printTree(root, 0);
+
+    return 0;
+}

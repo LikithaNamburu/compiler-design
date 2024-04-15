@@ -1,0 +1,20 @@
+a*b/c+d*e
+
+t1 = a*b
+t2= t1/c
+t3=d*e
+
+result = t2+t3
+
+{
+printf("enter values for a,b,c,d,e:");
+scaanf("%d,%d,%d,%d",&a,&b,&c,&d,&e);
+
+int t1=a*b
+int t2 = t1/c
+int t3 = d*e
+
+result= t2+t3
+print("result is "result");
+return 0;
+}
